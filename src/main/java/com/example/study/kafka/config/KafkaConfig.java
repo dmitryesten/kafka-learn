@@ -34,10 +34,5 @@ public class KafkaConfig {
         return factory;
     }
 
-    @Bean
-    String topic(){
-        return "topic-0";
-    }
-
 
 }
