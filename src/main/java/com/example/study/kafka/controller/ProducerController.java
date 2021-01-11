@@ -1,5 +1,10 @@
 package com.example.study.kafka.controller;
 
+import com.example.study.kafka.model.Event;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.protocol.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +21,14 @@ public class ProducerController {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    private String topic;
+    private NewTopic springTopic;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @PostMapping("/producer")
-    public String createEvent(@RequestBody String messsage) throws ExecutionException, InterruptedException {
-        return "event is created: " +  kafkaTemplate.send(topic,messsage).get().toString();
+    public String createEvent(@RequestBody Event event) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return kafkaTemplate.send(springTopic.name(), event.getKey(), objectMapper.writeValueAsString(event)).get().toString();
     }
 
 }
