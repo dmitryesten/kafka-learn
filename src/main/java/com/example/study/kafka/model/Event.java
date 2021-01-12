@@ -1,41 +1,19 @@
 package com.example.study.kafka.model;
 
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Data
+@RequiredArgsConstructor
 public class Event {
-
+    @NonNull
     private String key;
+    @NonNull
     private String value;
-    private LocalDateTime localDateTime;
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
-    public Event(String key, String value) {
-        this.key = key;
-        this.value = value;
-        this.localDateTime = LocalDateTime.now();
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
-    }
 }

@@ -1,6 +1,7 @@
 package com.example.study.kafka.controller;
 
 import com.example.study.kafka.model.KafkaTopic;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -15,7 +16,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+@Slf4j
+public class AdminTopicController {
 
     @Autowired
     public AdminClient adminClient;
@@ -48,7 +50,8 @@ public class AdminController {
 
     @DeleteMapping("/delete/topic/{nameTopic}")
     public void delete(@PathVariable(name = "nameTopic") String nameTopic ){
-        adminClient.deleteTopics(Collections.singleton(nameTopic));
+        log.info("Deleting topic: " + nameTopic);
+        adminClient.deleteTopics(Arrays.asList(nameTopic));
     }
 
 }
