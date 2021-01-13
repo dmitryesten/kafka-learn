@@ -3,11 +3,8 @@ package com.example.study.kafka.controller;
 import com.example.study.kafka.model.KafkaTopic;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.config.TopicBuilder;
-import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;

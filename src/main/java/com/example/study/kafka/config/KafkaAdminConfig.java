@@ -16,7 +16,7 @@ import java.util.Map;
 @Configuration
 public class KafkaAdminConfig {
 
-    @Value("${kafka.host}")
+    @Value("${remote.host}")
     private String host;
 
     @Bean
