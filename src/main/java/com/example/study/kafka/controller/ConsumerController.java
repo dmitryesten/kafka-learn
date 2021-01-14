@@ -20,8 +20,7 @@ public class ConsumerController {
 
     @PostMapping("/consumer")
     public void createConsumer(@RequestBody Event event) throws ExecutionException, InterruptedException, JsonProcessingException {
-        consumerService.consumer(event.toString());
+        consumerService.consumer(event);
     }
-
 
 }
