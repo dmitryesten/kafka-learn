@@ -25,24 +25,23 @@ public class KafkaConsumerConfig {
     public Map<String, Object> consumerConfig(){
         Map<String, Object> config = new HashMap<>();
             config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, host+":9092");
-            config.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
+            config.put(ConsumerConfig.GROUP_ID_CONFIG, "user_test");
             config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return config;
     }
 
     @Bean
-    public ConsumerFactory<String, Event> consumerFactory(){
+    public ConsumerFactory<String, Object> consumerFactory(){
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Event> kafkaContainerFactory(){
-        ConcurrentKafkaListenerContainerFactory<String, Event> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
-
 
 }
