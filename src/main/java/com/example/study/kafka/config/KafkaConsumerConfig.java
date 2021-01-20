@@ -23,27 +23,44 @@ public class KafkaConsumerConfig {
     private String host;
 
     @Bean
-    public Map<String, Object> consumerConfig(){
+    public Map<String, Object> consumerCommonConfig(){
         Map<String, Object> config = new HashMap<>();
             config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, host+":9092");
-            config.put(ConsumerConfig.GROUP_ID_CONFIG, "user_test");
             config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return config;
     }
 
     @Bean
-    public ConsumerFactory<String, Event> consumerFactory(){
-        JsonDeserializer<Event> deserializerEvent = new JsonDeserializer<>();
-            deserializerEvent.addTrustedPackages("com.example.study.kafka.model");
-        return new DefaultKafkaConsumerFactory(consumerConfig(), new StringDeserializer(), deserializerEvent);
+    public ConsumerFactory<String, String> consumerStringFactory(){
+        Map<String, Object> specialConfig = consumerCommonConfig();
+            specialConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "user_test_string");
+            specialConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        return new DefaultKafkaConsumerFactory(specialConfig, new StringDeserializer(), new StringDeserializer());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Event> kafkaContainerFactory(){
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerStringContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerStringFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, Event> consumerObjectFactory(){
+        Map<String, Object> specialConfig = consumerCommonConfig();
+            specialConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "user_test");
+            specialConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        JsonDeserializer<Event> deserializerEvent = new JsonDeserializer<>();
+            deserializerEvent.addTrustedPackages("com.example.study.kafka.model");
+        return new DefaultKafkaConsumerFactory(specialConfig, new StringDeserializer(), deserializerEvent);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, Event> kafkaListenerObjectContainerFactory(){
         ConcurrentKafkaListenerContainerFactory<String, Event> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(consumerObjectFactory());
         return factory;
     }
 

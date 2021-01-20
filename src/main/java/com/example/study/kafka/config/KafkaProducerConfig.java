@@ -6,6 +6,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -23,23 +24,35 @@ public class KafkaProducerConfig {
     private String host;
 
     @Bean
-    public Map<String, Object> producerConfig(){
+    public Map<String, Object> producerCommonConfig(){
         Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, host + ":9092");
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
+            config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, host + ":9092");
+            config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return config;
     }
 
     @Bean
-    public ProducerFactory<String, Event> producerFactory(){
-        return new DefaultKafkaProducerFactory<>(producerConfig());
+    public ProducerFactory<String, String> producerStringFactory(){
+        Map<String, Object> specialConfig = producerCommonConfig();
+            specialConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(specialConfig);
     }
 
     @Bean
-    public KafkaTemplate<String, Event> kafkaTemplate(){
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, String> kafkaStringTemplate(){
+        return new KafkaTemplate<>(producerStringFactory());
+    }
+
+    @Bean @Primary
+    public ProducerFactory<String, Event> producerObjectFactory(){
+        Map<String, Object> specialConfig = producerCommonConfig();
+            specialConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(specialConfig);
+    }
+
+    @Bean @Primary
+    public KafkaTemplate<String, Event> kafkaObjectTemplate(){
+        return new KafkaTemplate<>(producerObjectFactory());
     }
 
 

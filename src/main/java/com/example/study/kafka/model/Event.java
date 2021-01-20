@@ -1,10 +1,7 @@
 package com.example.study.kafka.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 
 @Data
