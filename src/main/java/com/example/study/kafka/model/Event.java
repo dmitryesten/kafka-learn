@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 
 @Data
+@RequiredArgsConstructor
 @NoArgsConstructor
 public class Event {
     @NonNull
