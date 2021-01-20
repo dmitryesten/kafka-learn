@@ -14,7 +14,7 @@ import java.util.Optional;
 public class RedisController {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Event> redisTemplate;
 
     @PostMapping("/set")
     public void set(@RequestBody Event event){

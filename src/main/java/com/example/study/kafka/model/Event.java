@@ -1,19 +1,19 @@
 package com.example.study.kafka.model;
 
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Event {
     @NonNull
     private String key;
     @NonNull
     private String value;
-    private LocalDateTime localDateTime = LocalDateTime.now();
-
+    @Getter
+    private final LocalDateTime localDateTime = LocalDateTime.now();
 }

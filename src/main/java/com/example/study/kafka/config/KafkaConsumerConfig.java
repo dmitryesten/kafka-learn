@@ -1,6 +1,7 @@
 package com.example.study.kafka.config;
 
 import com.example.study.kafka.model.Event;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,18 +28,20 @@ public class KafkaConsumerConfig {
             config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, host+":9092");
             config.put(ConsumerConfig.GROUP_ID_CONFIG, "user_test");
             config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return config;
     }
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory(){
-        return new DefaultKafkaConsumerFactory<>(consumerConfig());
+    public ConsumerFactory<String, Event> consumerFactory(){
+        JsonDeserializer<Event> deserializerEvent = new JsonDeserializer<>();
+            deserializerEvent.addTrustedPackages("com.example.study.kafka.model");
+        return new DefaultKafkaConsumerFactory(consumerConfig(), new StringDeserializer(), deserializerEvent);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaContainerFactory(){
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, Event> kafkaContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String, Event> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
